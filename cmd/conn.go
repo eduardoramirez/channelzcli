@@ -18,7 +18,7 @@ type TLSData struct {
 	ClientKey  string
 }
 
-func newGRPCConnection(ctx context.Context, addr string, insecure bool, tlsData TLSData) (*grpc.ClientConn, error) {
+func newGRPCConnection(ctx context.Context, addr string, insecure bool, authority string, tlsData TLSData) (*grpc.ClientConn, error) {
 	var dialOpts []grpc.DialOption
 	if insecure {
 		dialOpts = append(dialOpts, grpc.WithInsecure())
@@ -49,6 +49,10 @@ func newGRPCConnection(ctx context.Context, addr string, insecure bool, tlsData 
 			RootCAs:      ca,
 			MinVersion:   tls.VersionTLS13,
 		})))
+	}
+
+	if authority != "" {
+		dialOpts = append(dialOpts, grpc.WithAuthority(authority))
 	}
 
 	dialOpts = append(dialOpts, grpc.WithBlock(), grpc.WithBackoffMaxDelay(time.Second))

@@ -7,12 +7,13 @@ import (
 )
 
 type GlobalOptions struct {
-	Verbose  bool
-	Address  string
-	Insecure bool
-	TLSData  TLSData
-	Input    io.Reader
-	Output   io.Writer
+	Verbose   bool
+	Address   string
+	Insecure  bool
+	Authority string
+	TLSData   TLSData
+	Input     io.Reader
+	Output    io.Writer
 }
 
 type RootCommand struct {
@@ -37,6 +38,7 @@ func NewRootCommand(r io.Reader, w io.Writer) *RootCommand {
 	c.cmd.PersistentFlags().BoolVarP(&c.opts.Verbose, "verbose", "v", false, "verbose output")
 	c.cmd.PersistentFlags().BoolVarP(&c.opts.Insecure, "insecure", "k", false, "with insecure")
 	c.cmd.PersistentFlags().StringVar(&c.opts.Address, "addr", "", "address to gRPC server")
+	c.cmd.PersistentFlags().StringVar(&c.opts.Authority, "authority", "", "The authoritative name of the remote server. This value is passed as the value of the ':authority' pseudo-header in the HTTP/2 protocol. When TLS is used, this will also be used as the server name when verifying the server's certificate. It defaults to the address that is provided in the positional arguments.")
 	c.cmd.PersistentFlags().StringVar(&c.opts.TLSData.CAPool, "ca-pool", "", "Location of CA pool to load for validating server TLS connections. If blank the system pool will be used.")
 	c.cmd.PersistentFlags().StringVar(&c.opts.TLSData.ClientCert, "client-cert", "", "Location of the certificate to use for client TLS connections.")
 	c.cmd.PersistentFlags().StringVar(&c.opts.TLSData.ClientKey, "client-key", "", "Location of the private key file to use with --client-cert.")
